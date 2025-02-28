@@ -8681,41 +8681,49 @@ var instanceHistoricActivities = [
         render: function (viewer, _a) {
             var api = _a.api, processInstanceId = _a.processInstanceId;
             (function () { return __awaiter(void 0, void 0, void 0, function () {
-                var overlays, activities, counter, _i, activities_1, activity, id, seen, _a, activities_2, activity, id, overlay, toggleSequenceFlowButton, sequenceFlow;
-                return __generator(this, function (_b) {
-                    switch (_b.label) {
+                var overlayBadgeIds, overlays, addBadge, clearBadge, activities, counter, _i, activities_1, activity, id, toggleSequenceFlowButton, sequenceFlow;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
                         case 0:
+                            overlayBadgeIds = new Map();
                             overlays = viewer.get('overlays');
+                            addBadge = function (activities) {
+                                overlayBadgeIds.clear();
+                                for (var _i = 0, activities_2 = activities; _i < activities_2.length; _i++) {
+                                    var activity = activities_2[_i];
+                                    var id = activity.activityId;
+                                    // if (seen[id]) {
+                                    //   continue;
+                                    // } else {
+                                    //   seen[id] = true;
+                                    // }
+                                    var overlay = document.createElement('span');
+                                    overlay.innerText = "".concat(counter[id]);
+                                    overlay.className = 'badge';
+                                    overlay.style.cssText = "background: lightgray;";
+                                    var overlayBadgeId = overlays.add(id.split('#')[0], {
+                                        position: {
+                                            bottom: 17,
+                                            right: 10,
+                                        },
+                                        html: overlay,
+                                    });
+                                    overlayBadgeIds.set(id, overlayBadgeId);
+                                }
+                            };
+                            clearBadge = function () {
+                                overlayBadgeIds.forEach(function (overlayId, activityId) {
+                                    overlays.remove(overlayId);
+                                });
+                            };
                             return [4 /*yield*/, get(api, '/history/activity-instance', { processInstanceId: processInstanceId })];
                         case 1:
-                            activities = _b.sent();
+                            activities = _a.sent();
                             counter = {};
                             for (_i = 0, activities_1 = activities; _i < activities_1.length; _i++) {
                                 activity = activities_1[_i];
                                 id = activity.activityId;
                                 counter[id] = counter[id] ? counter[id] + 1 : 1;
-                            }
-                            seen = {};
-                            for (_a = 0, activities_2 = activities; _a < activities_2.length; _a++) {
-                                activity = activities_2[_a];
-                                id = activity.activityId;
-                                if (seen[id]) {
-                                    continue;
-                                }
-                                else {
-                                    seen[id] = true;
-                                }
-                                overlay = document.createElement('span');
-                                overlay.innerText = "".concat(counter[id]);
-                                overlay.className = 'badge';
-                                overlay.style.cssText = "\n          background: lightgray;\n        ";
-                                overlays.add(id.split('#')[0], {
-                                    position: {
-                                        bottom: 17,
-                                        right: 10,
-                                    },
-                                    html: overlay,
-                                });
                             }
                             toggleSequenceFlowButton = document.createElement('div');
                             toggleSequenceFlowButton.style.cssText = "\n          position: absolute;\n          right: 15px;\n          top: 15px;\n        ";
@@ -8724,9 +8732,11 @@ var instanceHistoricActivities = [
                             createRoot(toggleSequenceFlowButton).render(React.createElement(React.StrictMode, null,
                                 React.createElement(ToggleSequenceFlowButton, { onToggleSequenceFlow: function (value) {
                                         if (value) {
+                                            addBadge(activities !== null && activities !== void 0 ? activities : []);
                                             sequenceFlow = renderSequenceFlow(viewer, activities !== null && activities !== void 0 ? activities : []);
                                         }
                                         else {
+                                            clearBadge();
                                             clearSequenceFlow(sequenceFlow);
                                         }
                                     } })));

@@ -15,19 +15,12 @@ export default [
       (async () => {
         const overlayBadgeIds = new Map<string, string>();
         const overlays = viewer.get('overlays');
-        // const seen: Record<string, boolean> = {};
 
         const addBadge = (activities: any[]) => {
           overlayBadgeIds.clear();
 
           for (const activity of activities) {
             const id = activity.activityId;
-            // if (seen[id]) {
-            //   continue;
-            // } else {
-            //   seen[id] = true;
-            // }
-
             const overlay = document.createElement('span');
             overlay.innerText = `${counter[id]}`;
             overlay.className = 'badge';
