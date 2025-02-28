@@ -13,7 +13,41 @@ export default [
     pluginPoint: 'cockpit.processInstance.diagram.plugin',
     render: (viewer: any, { api, processInstanceId }: InstancePluginParams) => {
       (async () => {
+        const overlayBadgeIds = new Map<string, string>();
         const overlays = viewer.get('overlays');
+        // const seen: Record<string, boolean> = {};
+
+        const addBadge = (activities: any[]) => {
+          overlayBadgeIds.clear();
+
+          for (const activity of activities) {
+            const id = activity.activityId;
+            // if (seen[id]) {
+            //   continue;
+            // } else {
+            //   seen[id] = true;
+            // }
+
+            const overlay = document.createElement('span');
+            overlay.innerText = `${counter[id]}`;
+            overlay.className = 'badge';
+            overlay.style.cssText = `background: lightgray;`;
+            const overlayBadgeId = overlays.add(id.split('#')[0], {
+              position: {
+                bottom: 17,
+                right: 10,
+              },
+              html: overlay,
+            });
+            overlayBadgeIds.set(id, overlayBadgeId);
+          }
+        };
+
+        const clearBadge = () => {
+          overlayBadgeIds.forEach((overlayId, activityId) => {
+            overlays.remove(overlayId);
+          });
+        };
 
         const activities = await get(api, '/history/activity-instance', { processInstanceId });
 
@@ -23,29 +57,6 @@ export default [
           counter[id] = counter[id] ? counter[id] + 1 : 1;
         }
 
-        const seen: Record<string, boolean> = {};
-        for (const activity of activities) {
-          const id = activity.activityId;
-          if (seen[id]) {
-            continue;
-          } else {
-            seen[id] = true;
-          }
-
-          const overlay = document.createElement('span');
-          overlay.innerText = `${counter[id]}`;
-          overlay.className = 'badge';
-          overlay.style.cssText = `
-          background: lightgray;
-        `;
-          overlays.add(id.split('#')[0], {
-            position: {
-              bottom: 17,
-              right: 10,
-            },
-            html: overlay,
-          });
-        }
 
         const toggleSequenceFlowButton = document.createElement('div');
         toggleSequenceFlowButton.style.cssText = `
@@ -60,8 +71,10 @@ export default [
             <ToggleSequenceFlowButton
               onToggleSequenceFlow={(value: boolean) => {
                 if (value) {
+                  addBadge(activities ?? []);
                   sequenceFlow = renderSequenceFlow(viewer, activities ?? []);
                 } else {
+                  clearBadge();
                   clearSequenceFlow(sequenceFlow);
                 }
               }}
