@@ -8685,11 +8685,10 @@ var instanceHistoricActivities = [
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            overlayBadgeIds = new Map();
+                            overlayBadgeIds = [];
                             overlays = viewer.get('overlays');
                             addBadge = function (activities) {
-                                var _a;
-                                overlayBadgeIds.clear();
+                                overlayBadgeIds.length = 0;
                                 for (var _i = 0, activities_2 = activities; _i < activities_2.length; _i++) {
                                     var activity = activities_2[_i];
                                     var id = activity.activityId;
@@ -8704,19 +8703,13 @@ var instanceHistoricActivities = [
                                         },
                                         html: overlay,
                                     });
-                                    if (!overlayBadgeIds.has(id)) {
-                                        overlayBadgeIds.set(id, []);
-                                    }
-                                    (_a = overlayBadgeIds.get(id)) === null || _a === void 0 ? void 0 : _a.push(overlayBadgeId);
+                                    overlayBadgeIds.push(overlayBadgeId);
                                 }
                             };
                             clearBadge = function () {
-                                overlayBadgeIds.forEach(function (overlayIds) {
-                                    overlayIds.forEach(function (overlayId) {
-                                        overlays.remove(overlayId);
-                                    });
+                                overlayBadgeIds.forEach(function (overlayId) {
+                                    overlays.remove(overlayId);
                                 });
-                                overlayBadgeIds.clear();
                             };
                             return [4 /*yield*/, get(api, '/history/activity-instance', { processInstanceId: processInstanceId })];
                         case 1:
