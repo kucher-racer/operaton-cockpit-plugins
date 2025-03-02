@@ -8688,15 +8688,11 @@ var instanceHistoricActivities = [
                             overlayBadgeIds = new Map();
                             overlays = viewer.get('overlays');
                             addBadge = function (activities) {
+                                var _a;
                                 overlayBadgeIds.clear();
                                 for (var _i = 0, activities_2 = activities; _i < activities_2.length; _i++) {
                                     var activity = activities_2[_i];
                                     var id = activity.activityId;
-                                    // if (seen[id]) {
-                                    //   continue;
-                                    // } else {
-                                    //   seen[id] = true;
-                                    // }
                                     var overlay = document.createElement('span');
                                     overlay.innerText = "".concat(counter[id]);
                                     overlay.className = 'badge';
@@ -8708,13 +8704,19 @@ var instanceHistoricActivities = [
                                         },
                                         html: overlay,
                                     });
-                                    overlayBadgeIds.set(id, overlayBadgeId);
+                                    if (!overlayBadgeIds.has(id)) {
+                                        overlayBadgeIds.set(id, []);
+                                    }
+                                    (_a = overlayBadgeIds.get(id)) === null || _a === void 0 ? void 0 : _a.push(overlayBadgeId);
                                 }
                             };
                             clearBadge = function () {
-                                overlayBadgeIds.forEach(function (overlayId, activityId) {
-                                    overlays.remove(overlayId);
+                                overlayBadgeIds.forEach(function (overlayIds) {
+                                    overlayIds.forEach(function (overlayId) {
+                                        overlays.remove(overlayId);
+                                    });
                                 });
+                                overlayBadgeIds.clear();
                             };
                             return [4 /*yield*/, get(api, '/history/activity-instance', { processInstanceId: processInstanceId })];
                         case 1:

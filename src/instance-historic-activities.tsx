@@ -13,7 +13,7 @@ export default [
     pluginPoint: 'cockpit.processInstance.diagram.plugin',
     render: (viewer: any, { api, processInstanceId }: InstancePluginParams) => {
       (async () => {
-        const overlayBadgeIds = new Map<string, string>();
+        const overlayBadgeIds = new Map<string, string[]>();
         const overlays = viewer.get('overlays');
 
         const addBadge = (activities: any[]) => {
@@ -25,6 +25,7 @@ export default [
             overlay.innerText = `${counter[id]}`;
             overlay.className = 'badge';
             overlay.style.cssText = `background: lightgray;`;
+
             const overlayBadgeId = overlays.add(id.split('#')[0], {
               position: {
                 bottom: 17,
@@ -32,14 +33,21 @@ export default [
               },
               html: overlay,
             });
-            overlayBadgeIds.set(id, overlayBadgeId);
+
+            if (!overlayBadgeIds.has(id)) {
+              overlayBadgeIds.set(id, []);
+            }
+            overlayBadgeIds.get(id)?.push(overlayBadgeId);
           }
         };
 
         const clearBadge = () => {
-          overlayBadgeIds.forEach((overlayId, activityId) => {
-            overlays.remove(overlayId);
+          overlayBadgeIds.forEach((overlayIds) => {
+            overlayIds.forEach((overlayId) => {
+              overlays.remove(overlayId);
+            });
           });
+          overlayBadgeIds.clear();
         };
 
         const activities = await get(api, '/history/activity-instance', { processInstanceId });
