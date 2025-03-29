@@ -16,8 +16,8 @@ export const ToggleHistoryStatisticsButton = ({ onToggleHistoryStatistics }: any
   return (
     <button
       className="toggle-history-view-button"
-      title={!showHistoricBadges ? 'Show history instance statistics' : 'Hide history instance statistics'}
-      aria-label={!showHistoricBadges ? 'Show history instance statistics' : 'Hide history instance statistics'}
+      title={!showHistoricBadges ? 'Показать статистику истории экземпляров' : 'Скрыть статистику истории экземпляров'}
+      aria-label={!showHistoricBadges ? 'Показать статистику истории экземпляров' : 'Скрыть статистику истории экземпляров'}
       onClick={() => setShowHistoricBadges(!showHistoricBadges)}
     >
       <FaHistory style={{ opacity: !showHistoricBadges ? '0.33' : '1.0', fontSize: '133%' }} />

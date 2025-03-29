@@ -17,8 +17,8 @@ export const ToggleSequenceFlowButton = ({ onToggleSequenceFlow }: any) => {
   return (
     <button
       className="toggle-sequence-flow-button"
-      title={!showSequenceFlow ? 'Show sequence flow' : 'Hide sequence flow'}
-      aria-label={!showSequenceFlow ? 'Show sequence flow' : 'Hide sequence flow'}
+      title={!showSequenceFlow ? 'Показать последовательность процесса' : 'Скрыть последовательность процесса'}
+      aria-label={!showSequenceFlow ? 'Показать последовательность процесса' : 'Скрыть последовательность процесса'}
       onClick={() => setShowSequenceFlow(!showSequenceFlow)}
     >
       <GiStrikingArrows style={{ opacity: !showSequenceFlow ? '0.33' : '1.0', fontSize: '133%' }} />

@@ -11,8 +11,8 @@ export const ToggleHistoryViewButton = ({ onToggleHistoryView, initial }: any) =
   return (
     <button
       className="toggle-history-view-button"
-      title={!showHistoryView ? 'Show history view' : 'Show runtime view'}
-      aria-label={!showHistoryView ? 'Show history view' : 'Show runtime view'}
+      title={!showHistoryView ? 'Показать только историю' : 'Показать текущее выполнение'}
+      aria-label={!showHistoryView ? 'Показать только историю' : 'Показать текущее выполнение'}
       onClick={() => setShowHistoryView(!showHistoryView)}
     >
       <FaHistory style={{ opacity: !showHistoryView ? '0.33' : '1.0', fontSize: '133%' }} />
